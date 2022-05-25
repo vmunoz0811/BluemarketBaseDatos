@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="BluemarketBaseDatos:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>BluemarketBaseDatos</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="BluemarketBaseDatos-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="BluemarketBaseDatos:war exploded" />
+    </root>
+  </artifact>
+</component>

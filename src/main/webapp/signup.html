@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+  <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTRO</title>
+    <link rel="shortcut icon" href="images/logo_BM.png" type="image/x-icon">
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+
+
+  <section class="form-register">
+    <form id="signup">
+    <h4 >Registra tu usuario</h4>
+    name: <input class="controls" type="text" name="name" id="name" placeholder="Ingrese su nombre completo">
+    mail: <input class="controls" type="mail" name="mail" id="mail" placeholder="Ingrese su Correo">
+    username: <input class="controls" type="text" name="username" id="username" placeholder="Ingrese su nombre de usuario">
+    password: <input class="controls" type="password" name="password" id="password" placeholder="Ingrese su Contraseña">
+    role: <input class="controls" type="text" name="role" id="role" placeholder="Escriba su rol. Ej: Artista o Comprador">
+    <a href="indexArtist.html"><input class="button" type="submit" value="Registrar"></a>
+    </form>
+    <script>
+      const form = document.querySelector("form")
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        console.log(username)
+        try {
+          let response = await fetch(`./api/users/${username}`, {
+            method: 'GET',
+            headers: {
+
+              "Content-Type": "application/JSON",
+            },
+          });
+          let result = await response.json();
+
+          if (username == result.username && password == result.password) {
+            localStorage.setItem("username",username);
+            localStorage.setItem("name",result.name);
+            localStorage.setItem("lastname",result.lastname);
+            localStorage.setItem("mail",result.mail);
+            localStorage.setItem("fcoins", result.fcoins);
+            window.location.href = "./Profile.html";
+          } else {
+            window.location.href = "./401.html";
+          }
+
+        } catch (err) {
+          console.log(err);
+        }
+
+      }
+    </script>
+    <p><a href="login.html">¿Ya tienes una cuenta?</a></p>
+  </section>
+
+
+  
+</body>
+</html>
