@@ -43,7 +43,7 @@ public class UsersResources {
         }
     }*/
 
-    /*@POST
+    @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response createForm(
@@ -51,27 +51,41 @@ public class UsersResources {
             @FormParam("password") String password,
             @FormParam("name") String name,
             @FormParam("lastname") String lastname,
-            @FormParam("mail") String mail,
-            @FormParam("fcoins") String fcoins
-
-    ) {
-        String contextPath = context.getRealPath("") + File.separator;
+            @FormParam("mail") String mail
+    ) throws SQLException {
+        Connection con =null;
         System.out.println("Entró");
+        User user=null;
         try {
-            User user = new UserService().createUser(username, name, lastname, mail, password, fcoins, contextPath);
+
+            // Registering the JDBC driver
+            Class.forName(JDBC_DRIVER);
+            // Opening database connection
+            con = DriverManager.getConnection(DB_URL, USER, PASS);
+            user = new UserService().createUser(username, name, lastname, mail, password, "0", con);
             System.out.println("creo el usuario");
-            return Response.created(UriBuilder.fromResource(UsersResources.class).path(username).build())
-                    .entity(user)
-                    .build();
+            con.close();
+
         } catch (IOException e) {
             return Response.serverError().build();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }finally {
+            if(con!= null){
+                con.close();
+            }
         }
-    }*/
+        return Response.created(UriBuilder.fromResource(UsersResources.class).path(username).build())
+                .entity(user)
+                .build();
+    }
 
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("username") String username) {
+    public Response get(@PathParam("username") String username) throws SQLException {
         Connection con =null;
         List<User> users=new ArrayList<>();
         User user = null;
@@ -88,13 +102,18 @@ public class UsersResources {
                     .findFirst()
                     .orElse(null);
 
-
+                con.close();
         } catch (IOException e) {
             return Response.serverError().build();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        }finally {
+            if(con!=null){
+                con.close();
+            }
+
         }
         if (user != null) {
             System.out.println("lo hizo");

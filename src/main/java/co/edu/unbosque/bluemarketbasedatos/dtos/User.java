@@ -6,10 +6,6 @@ public class User {
 
     @CsvBindByName
     private String name;
-
-    @CsvBindByName
-    private String lastname;
-
     @CsvBindByName
     private String mail;
 
@@ -21,19 +17,21 @@ public class User {
 
     @CsvBindByName
     private String roll;
+    @CsvBindByName
+    private String fcois;
 
 
 
     public User() {
     }
 
-    public User(String username, String name, String mail, String password, String roll) {
+    public User(String username, String name, String mail, String password, String roll, String fcoins) {
         this.name = name;
-        this.lastname = lastname;
         this.mail = mail;
         this.username = username;
         this.password = password;
         this.roll = roll;
+        this.fcois= fcoins;
 
     }
 
@@ -61,13 +59,6 @@ public class User {
         this.name = name;
     }
 
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
 
     public String getMail() {
         return mail;
@@ -85,15 +76,23 @@ public class User {
         this.roll = roll;
     }
 
+    public String getFcois() {
+        return fcois;
+    }
+
+    public void setFcois(String fcois) {
+        this.fcois = fcois;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "name='" + name + '\'' +
-                ", lastname='" + lastname + '\'' +
                 ", mail='" + mail + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", roll='" + roll + '\'' +
+                ", fcois='" + fcois + '\'' +
                 '}';
     }
 }

@@ -23,38 +23,36 @@
     <a href="indexArtist.html"><input class="button" type="submit" value="Registrar"></a>
     </form>
     <script>
-      const form = document.querySelector("form")
+      const form = document.querySelector("form");
+
       form.onsubmit = async (e) => {
         e.preventDefault();
 
-        let username = document.getElementById("username").value;
-        let password = document.getElementById("password").value;
-        console.log(username)
+        const formData = new FormData(form);
         try {
-          let response = await fetch(`./api/users/${username}`, {
-            method: 'GET',
+          let response = await fetch("./api/users", {
+            method: "POST",
             headers: {
-
-              "Content-Type": "application/JSON",
+              "Content-Type": "application/x-www-form-urlencoded",
             },
+            body: new URLSearchParams(formData),
+
           });
           let result = await response.json();
-
-          if (username == result.username && password == result.password) {
-            localStorage.setItem("username",username);
-            localStorage.setItem("name",result.name);
-            localStorage.setItem("lastname",result.lastname);
-            localStorage.setItem("mail",result.mail);
-            localStorage.setItem("fcoins", result.fcoins);
-            window.location.href = "./Profile.html";
-          } else {
-            window.location.href = "./401.html";
-          }
+          console.log(result);
 
         } catch (err) {
           console.log(err);
         }
-
+        localStorage.setItem("username",result.username);
+        localStorage.setItem("name",result.name);
+        localStorage.setItem("mail",result.mail);
+        localStorage.setItem("fcoins", result.fcoins);
+        if(result.role=="ARTIST"){
+          window.location.href = "./profileArtist.html";
+        }else {
+          window.location.href = "./profileBuyer.html";
+        }
       }
     </script>
     <p><a href="login.html">¿Ya tienes una cuenta?</a></p>
