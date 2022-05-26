@@ -13,15 +13,23 @@ import jakarta.ws.rs.core.UriBuilder;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/users")
 public class UsersResources {
+    static final String JDBC_DRIVER = "org.postgresql.Driver";
+    static final String DB_URL = "jdbc:postgresql://localhost/VAM";
 
+    // Database credentials
+    static final String USER = "postgres";
+    static final String PASS = "";
     @Context
     ServletContext context;
-
-    @GET
+  /*  @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response list() {
         try {
@@ -33,9 +41,9 @@ public class UsersResources {
         } catch (IOException e) {
             return Response.serverError().build();
         }
-    }
+    }*/
 
-    @POST
+    /*@POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response createForm(
@@ -58,36 +66,49 @@ public class UsersResources {
         } catch (IOException e) {
             return Response.serverError().build();
         }
-    }
+    }*/
 
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@PathParam("username") String username) {
+        Connection con =null;
+        List<User> users=new ArrayList<>();
+        User user = null;
         try {
-            List<User> users = new UserService().getUsers();
+            // Registering the JDBC driver
+            Class.forName(JDBC_DRIVER);
+            // Opening database connection
+            con = DriverManager.getConnection(DB_URL, USER, PASS);
+
+            users =  new UserService().getUsers(con);
             System.out.println("entró");
-            User user = users.stream()
+            user= users.stream()
                     .filter(u -> u.getUsername().equals(username))
                     .findFirst()
                     .orElse(null);
 
-            if (user != null) {
-                System.out.println("lo hizo");
-                System.out.println(user);
-                return Response.ok()
-                        .entity(user)
-                        .build();
-            } else {
-                return Response.status(404)
-                        .entity(new ExceptionMessage(404, "User not found"))
-                        .build();
-            }
+
         } catch (IOException e) {
             return Response.serverError().build();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (user != null) {
+            System.out.println("lo hizo");
+            System.out.println(user);
+            return Response.ok()
+                    .entity(user)
+                    .build();
+        } else {
+            return Response.status(404)
+                    .entity(new ExceptionMessage(404, "User not found"))
+                    .build();
         }
     }
-
+/*
     @POST
     @Path("/form")
     @Produces(MediaType.APPLICATION_JSON)
@@ -120,5 +141,5 @@ public class UsersResources {
         } catch (IOException e) {
             return Response.serverError().build();
         }
-    }
+    }*/
 }

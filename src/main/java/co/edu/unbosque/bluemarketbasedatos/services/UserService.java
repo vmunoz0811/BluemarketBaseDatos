@@ -5,36 +5,50 @@ import com.opencsv.bean.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
 
-    public List<User> getUsers() throws IOException {
 
-        List<User> users;
+    public List<User> getUsers(Connection conn) throws IOException, SQLException {
+        Statement stmt = null;
+        List<User> users= new ArrayList<>();
+        users = null;
 
-        try (InputStream is = UserService.class.getClassLoader()
-                .getResourceAsStream("users.csv")) {
+        try {
+            stmt= conn.createStatement();
+            String sql = "SELECT * FROM userapp";
+            ResultSet rs= stmt.executeQuery(sql);
 
-            HeaderColumnNameMappingStrategy<User> strategy = new HeaderColumnNameMappingStrategy<>();
-            strategy.setType(User.class);
-
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-
-                CsvToBean<User> csvToBean = new CsvToBeanBuilder<User>(br)
-                        .withType(User.class)
-                        .withMappingStrategy(strategy)
-                        .withIgnoreLeadingWhiteSpace(true)
-                        .build();
-
-                users = csvToBean.parse();
+            while (rs.next()){
+             String username= rs.getString("id_user");
+             String password= rs.getString("password");
+             String email = rs.getString("email");
+             String fullname = rs.getString("fullname");
+             String roll = rs.getString("role");
+                User user= new User(username,fullname,email,password,roll);
+                users.add(user);
             }
-        }
+            rs.close();
+            stmt.close();
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            if(stmt!=null){
+                stmt.close();
+            }
+
+        }
         return users;
     }
 
-    public User createUser(String username, String name, String mail, String password,String roll, String path) throws IOException {
+   /* public User createUser(String username, String name, String mail, String password,String roll, String path) throws IOException {
 
             String newLine = username + "," + name + "," + "," + mail + "," + password + "," + Fcoins + "\n";
         FileOutputStream os = new FileOutputStream(path + "WEB-INF/classes/" + "users.csv", true);
@@ -42,7 +56,7 @@ public class UserService {
         os.write(newLine.getBytes());
         os.close();
         return new User(username, name, lastname, mail, password, Fcoins);
-    }
+    }*/
 
 
 }

@@ -20,30 +20,21 @@ public class User {
     private String password;
 
     @CsvBindByName
-    private String fcoins;
+    private String roll;
 
-    @CsvBindByName
-    private String profilePhoto;
+
 
     public User() {
     }
 
-    public User(String username, String name, String lastname, String mail, String password, String fcoins) {
+    public User(String username, String name, String mail, String password, String roll) {
         this.name = name;
         this.lastname = lastname;
         this.mail = mail;
         this.username = username;
         this.password = password;
-        this.fcoins = fcoins;
-        this.profilePhoto = profilePhoto;
-    }
+        this.roll = roll;
 
-    public String getProfilePhoto() {
-        return profilePhoto;
-    }
-
-    public void setProfilePhoto(String profilePhoto) {
-        this.profilePhoto = profilePhoto;
     }
 
     public String getUsername() {
@@ -86,12 +77,12 @@ public class User {
         this.mail = mail;
     }
 
-    public String getFcoins() {
-        return fcoins;
+    public String getRoll() {
+        return roll;
     }
 
-    public void setFcoins(String fcoins) {
-        this.fcoins = fcoins;
+    public void setRoll(String roll) {
+        this.roll = roll;
     }
 
     @Override
@@ -102,7 +93,7 @@ public class User {
                 ", mail='" + mail + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", fcoins='" + fcoins + '\'' +
+                ", roll='" + roll + '\'' +
                 '}';
     }
 }

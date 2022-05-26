@@ -39,10 +39,14 @@
           if (username == result.username && password == result.password) {
             localStorage.setItem("username",username);
             localStorage.setItem("name",result.name);
-            localStorage.setItem("lastname",result.lastname);
             localStorage.setItem("mail",result.mail);
-            localStorage.setItem("fcoins", result.fcoins);
-            window.location.href = "./profileArtist.html";
+            localStorage.setItem("roll", result.role);
+            if(result.role=="artis"){
+              window.location.href = "./profileArtist.html";
+            }else {
+              window.location.href = "./profileBuyer.html";
+            }
+
           } else {
             window.location.href = "./401.html";
           }
